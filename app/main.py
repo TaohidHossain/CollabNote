@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from app.core.config import db_settings, jwt_settings
-
+from app.data.postgresql import DATABASE_URL
 app = FastAPI()
 
 @app.get("/")
@@ -19,5 +19,6 @@ async def root():
             "JWT_SECRET": jwt_settings.JWT_SECRET,
             "JWT_ALGORITHM": jwt_settings.JWT_ALGORITHM,
             "JWT_ACCESS_TOKEN_EXPIRE_MINUTES": jwt_settings.JWT_ACCESS_TOKEN_EXPIRE_MINUTES,
-        }
+        },
+        "Db_URL": DATABASE_URL
     }

@@ -13,7 +13,7 @@ class DB_Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_SERVER: str
-    POSTGRES_PORT: str
+    POSTGRES_PORT: int
     POSTGRES_DATABASE: str
 
     model_config = _base_config

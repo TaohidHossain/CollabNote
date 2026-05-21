@@ -11,7 +11,7 @@ DATABASE_URL = URL.create(
     host=db_settings.POSTGRES_SERVER,
     port=db_settings.POSTGRES_PORT,
     database=db_settings.POSTGRES_DATABASE
-)
+).render_as_string(hide_password=False)
 
 engine = create_async_engine(
     url= DATABASE_URL,
