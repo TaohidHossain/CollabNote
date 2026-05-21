@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.config import db_settings, jwt_settings
+from app.core.config import db_settings, jwt_settings
 
 app = FastAPI()
 
