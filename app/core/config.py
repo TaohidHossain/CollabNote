@@ -25,6 +25,14 @@ class JWT_Settings(BaseSettings):
 
     model_config = _base_config
 
+class MongoDB_Settings(BaseSettings):
+    MONGO_SERVER: str
+    MONGO_PORT: int
+    MONGO_DATABASE: str
+
+    model_config = _base_config
+
 
 db_settings = DB_Settings()
 jwt_settings = JWT_Settings()
+mongodb_settings = MongoDB_Settings()
