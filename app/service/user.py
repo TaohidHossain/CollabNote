@@ -20,18 +20,18 @@ class UserService:
 
     async def add(self, credentials: UserCreateRequest) -> User:
         user = User(**credentials.model_dump(exclude={"password"}))
-        hashed_password = pwd_context.hash(credentials.password)
-        user.hashed_password = hashed_password
+        password_hash = pwd_context.hash(credentials.password)
+        user.password_hash = password_hash
         self.session.add(user)
         await self.session.commit()
         await self.session.refresh(user)
         return user
     
-    async def login_user(self, email: str, password: str) -> str | None:
+    async def login(self, email: str, password: str) -> str | None:
         user = await self.session.execute(select(User).where(User.email == email))
         user = user.scalar_one_or_none()
-        if not user or not pwd_context.verify(password, user.hashed_password):
+        if not user or not pwd_context.verify(password, user.password_hash):
             return None
-        token = create_access_token(data={"sub": user.id})
+        token = create_access_token(data={"sub": str(user.id)})
         return token
 
