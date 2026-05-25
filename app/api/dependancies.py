@@ -1,5 +1,6 @@
 from typing import Annotated
 from fastapi import Depends, HTTPException, status
+from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.utils import decode_access_token
@@ -23,13 +24,13 @@ async def get_current_user(service: UserServiceDep, token: Annotated[str, Depend
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token or expired token")
     
-    user_id = service.get_user_by_id(data["sub"]["user_id"])
+    user_id = data["sub"]
     if not user_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token or expired token")
     
-    return await UserService.get(user_id) # may need to cast str to UUID
+    return await service.get(user_id)
 
 UserDep = Annotated[User, Depends(get_current_user)]
     

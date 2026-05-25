@@ -1,5 +1,6 @@
 from uuid import UUID
 
+from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from passlib.context import CryptContext
@@ -22,9 +23,13 @@ class UserService:
         user = User(**credentials.model_dump(exclude={"password"}))
         password_hash = pwd_context.hash(credentials.password)
         user.password_hash = password_hash
-        self.session.add(user)
-        await self.session.commit()
-        await self.session.refresh(user)
+        try:    
+            self.session.add(user)
+            await self.session.commit()
+            await self.session.refresh(user)
+        except Exception as e:
+            await self.session.rollback()
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User with this email already exists")
         return user
     
     async def login(self, email: str, password: str) -> str | None:
